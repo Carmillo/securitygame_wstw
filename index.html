@@ -198,6 +198,528 @@
             display: none;
         }
 
+        #feedbackBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 550px;
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            border: 5px solid #000;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        #feedbackBox.show {
+            display: block;
+            animation: popIn 0.4s ease-out;
+        }
+
+        .feedback-icon {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feedback-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .feedback-title.correct {
+            color: #2f9e44;
+        }
+
+        .feedback-title.wrong {
+            color: #c92a2a;
+        }
+
+        .feedback-explanation {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0f3460;
+        }
+
+        .feedback-continue {
+            text-align: center;
+            padding: 12px 30px;
+            background: #00d9ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+        }
+
+        .feedback-continue:hover {
+            background: #00b8d4;
+            transform: scale(1.05);
+        }
+
+        /* Victory Screen */
+        #victoryScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            color: white;
+            text-align: center;
+            animation: fadeIn 1s;
+        }
+
+        #victoryScreen.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .victory-trophy {
+            font-size: 120px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .victory-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+
+        .victory-subtitle {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .victory-stats {
+            background: rgba(255,255,255,0.2);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            min-width: 400px;
+        }
+
+        .stat-row {
+            font-size: 20px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 24px;
+            color: #ffd43b;
+        }
+
+        .badges {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.3);
+            border: 3px solid gold;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            animation: popIn 0.5s;
+        }
+
+        .badge-label {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .victory-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .victory-button {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .victory-button.primary {
+            background: #00d9ff;
+            color: #000;
+        }
+
+        .victory-button.primary:hover {
+            background: #00b8d4;
+            transform: scale(1.1);
+        }
+
+        .victory-button.secondary {
+            background: #51cf66;
+            color: #fff;
+        }
+
+        .victory-button.secondary:hover {
+            background: #2f9e44;
+            transform: scale(1.1);
+        }
+
+        #incidentBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 25px;
+            border: 5px solid #ff0000;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.8);
+            z-index: 2000;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 60px rgba(255, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 80px rgba(255, 0, 0, 1); }
+        }
+
+        #incidentBox.show {
+            display: block;
+            animation: shake 0.5s, pulse 2s infinite 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-52%, -50%); }
+            20%, 40%, 60%, 80% { transform: translate(-48%, -50%); }
+        }
+
+        .incident-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .incident-icon {
+            font-size: 48px;
+            margin-right: 15px;
+        }
+
+        .incident-title {
+            flex: 1;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .incident-description {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .incident-option {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 12px;
+            margin: 10px 0;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .incident-option:hover {
+            background: #fff;
+            transform: translateX(10px) scale(1.05);
+            border-color: #00d9ff;
+        }
+
+        .incident-option.correct {
+            background: #51cf66;
+            border-color: #2f9e44;
+            color: #fff;
+        }
+
+        .incident-option.wrong {
+            background: #ff6b6b;
+            border-color: #c92a2a;
+            color: #fff;
+        }
+
+        .incident-timer {
+            display: none; /* Removed - no time pressure */
+        }
+
+        /* Training Module Styles */
+        .training-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0066CC 0%, #667eea 100%);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .training-container {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .training-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0066CC;
+            padding-bottom: 20px;
+        }
+
+        .training-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+
+        .training-title {
+            color: #0066CC;
+            font-size: 32px;
+            margin: 10px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .training-subtitle {
+            color: #E30613;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        .training-content {
+            color: #333;
+            font-family: Arial, sans-serif;
+            min-height: 400px;
+            line-height: 1.8;
+        }
+
+        .training-page {
+            display: none;
+        }
+
+        .training-page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .training-page h2 {
+            color: #0066CC;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .training-page h3 {
+            color: #E30613;
+            font-size: 20px;
+            margin: 20px 0 10px;
+        }
+
+        .training-page ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .training-page li {
+            margin: 10px 0;
+            padding-left: 5px;
+        }
+
+        .training-highlight {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .training-warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .training-success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .training-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .training-nav-btn {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Arial, sans-serif;
+        }
+
+        .training-nav-btn:hover {
+            background: #0052a3;
+            transform: scale(1.05);
+        }
+
+        .training-nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .training-progress {
+            color: #0066CC;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .training-overlay.hidden {
+            display: none;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: fixed;
+            background: white;
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 3px solid #0066CC;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1500;
+            display: none;
+            animation: bounceIn 0.3s;
+        }
+
+        .speech-bubble.show {
+            display: block;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .speech-bubble-name {
+            font-weight: bold;
+            color: #0066CC;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .speech-bubble-title {
+            font-size: 12px;
+            color: #E30613;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .speech-bubble-joke {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
         #musicToggle {
             margin-top: 10px;
             padding: 10px 20px;
@@ -217,11 +739,22 @@
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🛡️ IT-SECURITY ADVENTURE 🛡️</h1>
-        <div class="subtitle">Wiener Stadtwerke - Security Awareness Game</div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 10px;">
+            <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#0066CC"/>
+                <circle cx="50" cy="50" r="35" fill="#E30613"/>
+                <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">W</text>
+            </svg>
+            <h1 style="margin: 0;">🛡️ IT-SECURITY ADVENTURE 🛡️</h1>
+        </div>
+        <div class="subtitle">Wiener Stadtwerke - Security Awareness Training</div>
         <canvas id="gameCanvas" width="800" height="600"></canvas>
-        <div id="score">🏆 Punkte: <span id="scoreValue">0</span> / 5</div>
-        <button id="musicToggle">🔊 Musik: AN</button>
+        <div id="score">🏆 Punkte: <span id="scoreValue">0</span> / <span id="totalQuestions">0</span></div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
+            <button id="musicToggle">🔊 Musik: AN</button>
+            <button id="incidentTrigger" style="background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">🚨 INCIDENT AUSLÖSEN</button>
+            <button id="newGameButton" style="background: #ff9500; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">🔄 NEUES SPIEL</button>
+        </div>
         <div id="controls">
             <div class="control-row">
                 <span class="key">↑</span>
@@ -248,6 +781,104 @@
         <div id="quizFeedback" class="hidden"></div>
     </div>
 
+    <div id="feedbackBox">
+        <div class="feedback-icon" id="feedbackIcon"></div>
+        <div class="feedback-title" id="feedbackTitle"></div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+        <button class="feedback-continue" id="feedbackContinue">Weiter</button>
+    </div>
+
+    <div id="incidentBox">
+        <div class="incident-timer" id="incidentTimer">15</div>
+        <div class="incident-header">
+            <div class="incident-icon" id="incidentIcon"></div>
+            <div class="incident-title" id="incidentTitle"></div>
+        </div>
+        <div class="incident-description" id="incidentDescription"></div>
+        <div id="incidentOptions"></div>
+    </div>
+
+    <div class="speech-bubble" id="speechBubble">
+        <div class="speech-bubble-name" id="speechName"></div>
+        <div class="speech-bubble-title" id="speechTitle"></div>
+        <div class="speech-bubble-joke" id="speechJoke"></div>
+    </div>
+
+    <div id="victoryScreen">
+        <div class="victory-trophy">🏆</div>
+        <div class="victory-title">HERZLICHEN GLÜCKWUNSCH!</div>
+        <div class="victory-subtitle">Du bist jetzt ein Security-Champion der Wiener Stadtwerke!</div>
+
+        <div class="victory-stats">
+            <div class="stat-row">
+                <span>Gesamt-Punkte:</span>
+                <span class="stat-value" id="finalScore">0</span>
+            </div>
+            <div class="stat-row">
+                <span>NPC-Quizzes:</span>
+                <span class="stat-value" id="npcScore">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Security-Incidents:</span>
+                <span class="stat-value" id="incidentScoreDisplay">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Erfolgsquote:</span>
+                <span class="stat-value" id="successRate">0%</span>
+            </div>
+        </div>
+
+        <div class="badges">
+            <div class="badge" id="badge1">
+                <div>🛡️</div>
+                <div class="badge-label">Security Pro</div>
+            </div>
+            <div class="badge" id="badge2">
+                <div>⚡</div>
+                <div class="badge-label">Quick Thinker</div>
+            </div>
+            <div class="badge" id="badge3">
+                <div>🎯</div>
+                <div class="badge-label">Perfect Score</div>
+            </div>
+        </div>
+
+        <div class="victory-buttons">
+            <button class="victory-button primary" onclick="location.reload()">🔄 Nochmal spielen</button>
+            <button class="victory-button secondary" onclick="printCertificate()">📜 Zertifikat drucken</button>
+        </div>
+    </div>
+
+    <!-- Training Module -->
+    <div id="trainingModule" class="training-overlay">
+        <div class="training-container">
+            <div class="training-header">
+                <svg class="training-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#0066CC"/>
+                    <circle cx="50" cy="50" r="35" fill="#E30613"/>
+                    <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">W</text>
+                </svg>
+                <h1 class="training-title">IT-Security Awareness Training</h1>
+                <p class="training-subtitle">Wiener Stadtwerke GmbH</p>
+            </div>
+
+            <div class="training-content" id="trainingContent">
+                <!-- Training pages will be inserted here -->
+            </div>
+
+            <div class="training-navigation">
+                <button id="trainingPrev" class="training-nav-btn" style="visibility: hidden;">← Zurück</button>
+                <div class="training-progress">
+                    <span id="trainingPageNum">1</span> / <span id="trainingPageTotal">6</span>
+                </div>
+                <button id="trainingNext" class="training-nav-btn">Weiter →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="npcs_data.js"></script>
+    <script src="incidents_data.js"></script>
+    <script src="training_data.js"></script>
     <script src="game.js"></script>
 </body>
 </html>
