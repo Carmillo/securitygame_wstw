@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiener Stadtwerke - IT-Security Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a2e;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        #gameContainer {
+            text-align: center;
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        h1 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+            font-size: 24px;
+            text-shadow: 2px 2px #0f3460;
+        }
+
+        .subtitle {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        canvas {
+            border: 4px solid #0f3460;
+            background: #2d4a3e;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #controls {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f3460;
+            border-radius: 5px;
+        }
+
+        .control-row {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .key {
+            background: #00d9ff;
+            color: #1a1a2e;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 0 3px;
+        }
+
+        #dialogBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            color: #000;
+            padding: 20px;
+            border: 4px solid #000;
+            border-radius: 10px;
+            display: none;
+            font-size: 16px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #dialogBox.show {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .dialog-name {
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .dialog-text {
+            line-height: 1.6;
+        }
+
+        .dialog-continue {
+            text-align: right;
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        #quizBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: #fff;
+            color: #000;
+            padding: 25px;
+            border: 4px solid #000;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+        }
+
+        #quizBox.show {
+            display: block;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #0f3460;
+        }
+
+        .quiz-option {
+            background: #e8f4f8;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #0f3460;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #00d9ff;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: #51cf66;
+            border-color: #2f9e44;
+        }
+
+        .quiz-option.wrong {
+            background: #ff6b6b;
+            border-color: #c92a2a;
+        }
+
+        #score {
+            margin-top: 15px;
+            padding: 10px;
+            background: #0f3460;
+            color: #00d9ff;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #musicToggle {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        #musicToggle:hover {
+            background: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1>🛡️ IT-SECURITY ADVENTURE 🛡️</h1>
+        <div class="subtitle">Wiener Stadtwerke - Security Awareness Game</div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="score">🏆 Punkte: <span id="scoreValue">0</span> / 5</div>
+        <button id="musicToggle">🔊 Musik: AN</button>
+        <div id="controls">
+            <div class="control-row">
+                <span class="key">↑</span>
+                <span class="key">↓</span>
+                <span class="key">←</span>
+                <span class="key">→</span>
+                Bewegen
+            </div>
+            <div class="control-row">
+                <span class="key">SPACE</span> Interagieren / Weiter
+            </div>
+        </div>
+    </div>
+
+    <div id="dialogBox">
+        <div class="dialog-name" id="dialogName"></div>
+        <div class="dialog-text" id="dialogText"></div>
+        <div class="dialog-continue">▼ SPACE zum Fortfahren</div>
+    </div>
+
+    <div id="quizBox">
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div id="quizOptions"></div>
+        <div id="quizFeedback" class="hidden"></div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
