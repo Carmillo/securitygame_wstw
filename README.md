@@ -1,254 +1,236 @@
-# 🛡️ IT-Security Adventure - Wiener Stadtwerke
+# 🛡️ IT-Security Adventure Game
 
-Ein Pokemon-Style Security Awareness Game für Mitarbeiter der Wiener Stadtwerke mit umfassendem Schulungsmodul.
+A retro-style Security Awareness Training Game with comprehensive learning module.
 
-## 🎮 Über das Spiel
+## 🎮 About
 
-Ein interaktives, browserbasiertes Spiel im 8-Bit-Stil, das Mitarbeiter auf spielerische Weise über wichtige IT-Sicherheitsthemen aufklärt. Das Spiel kombiniert ein umfassendes Schulungsmodul mit praktischen Quizzes und zufälligen Security-Incidents.
+An interactive, browser-based game in 8-bit style that teaches important IT security topics in a playful way. Combines theoretical training with practical quizzes and random security incidents.
 
-### ✨ Features
+## ✨ Features
 
-#### Gameplay
-- 🎨 **Pixel-Art Grafik** im Pokemon-Style (Top-Down-Ansicht)
-- 🎵 **Dynamische 8-Bit Musik** - Wechselt zwischen Background und Quiz-Musik
-- 🎯 **12 NPCs mit 39 Quiz-Fragen** zu verschiedenen IT-Security-Themen
-- 🚨 **15 zufällige Security-Incidents** für praxisnahes Training
-- 💬 **Interaktive NPCs** mit Sprechblasen, Witzen und individuellen Designs
-- 🏃 **Animierte NPC-Bewegungen** - NPCs laufen smooth durch das Büro
+### Multilingual Support
+- 🌍 **Full English & German Support** - Complete game in both languages
+- 🎌 **Language Selection** - Choose your preferred language at start
+- 🌐 **39 Countries** - Select your country from comprehensive list
 
-#### Schulung & Training
-- 📚 **6-seitiges Schulungsmodul** vor dem Spiel
-- 🎓 **Umfassende Theorie** zu allen Security-Themen
-- ✅ **Sofortiges Feedback** mit ausführlichen Erklärungen
-- 📜 **Druckbares Zertifikat** mit Wiener Stadtwerke Branding
+### Gamification & Competition
+- 🏆 **Global Leaderboard** - Compete with players worldwide
+- 📊 **Smart Scoring System** - Points + time bonus calculation
+- 🥇 **Rankings** - Track your position among all players
+- 🌍 **Country Flags** - See where players are from
 
-#### Gamification
-- 🏆 **Badge-System** mit 3 verschiedenen Abzeichen
-- 📊 **Detaillierte Statistiken** auf Victory Screen
-- ⏱️ **Zeiterfassung** - Spielzeit wird auf Zertifikat angezeigt
-- 🏅 **Perfect Score Bonus** - Spezielle Anerkennung für 100%
-- 💾 **Auto-Save Funktion** - Fortschritt wird automatisch gespeichert
+### Learning Content
+- 🎨 Retro Pixel-Art Graphics (classic top-down view)
+- 🎵 Dynamic 8-Bit Music (background & quiz music)
+- 🎯 **12 NPCs with 39 quiz questions** on various IT security topics
+- 🚨 **15 random security incident scenarios**
+- 📚 **6-page training module** before the game
+- 🏆 Badge system with 3 different achievements
+- 📜 **Printable certificate** with your name and stats
+- ⏱️ Time tracking (displayed on certificate)
+- 💾 Auto-save function (24h persistence)
+- ⌨️ Keyboard shortcuts (ESC, Enter)
+- 🎵 Sound effects for correct/wrong answers
 
-#### Benutzerfreundlichkeit
-- ⌨️ **Keyboard Shortcuts** - ESC und Enter für schnellere Navigation
-- 🎵 **Sound Effects** - Verschiedene Sounds für richtig/falsch
-- 🔀 **Randomisierte Antworten** - Keine vorhersehbaren Muster
-- 🔄 **Progress Saving** - 24h Speicherung im localStorage
+## 🔒 Security Topics
 
-## 🔒 IT-Sicherheitsthemen
+### NPC Quizzes (12 topics, 39 questions)
+1. Phishing Recognition
+2. Password Security
+3. Social Engineering
+4. Clean Desk Policy
+5. USB Security
+6. Ransomware
+7. Software Updates
+8. WLAN & VPN
+9. Backup Strategy
+10. GDPR & Data Protection
+11. Printer Security
+12. Risk Management
 
-Das Spiel behandelt alle wichtigen Security-Themen:
+### Random Incidents (15 scenarios)
+- Suspicious emails
+- Tailgating
+- Found USB sticks
+- Social engineering calls
+- Data breaches
+- Unlocked PCs
+- Public WiFi
+- Malware warnings
+- And more...
 
-### NPC-Quizzes (12 Themen, 39 Fragen)
-1. **Phishing-Erkennung** - E-Mail-Sicherheit und verdächtige Links
-2. **Passwort-Sicherheit** - Sichere Passwörter und Passwort-Manager
-3. **Social Engineering** - Manipulation und psychologische Tricks
-4. **Clean-Desk-Policy** - Arbeitsplatzsicherheit
-5. **USB-Sicherheit** - Umgang mit unbekannten Medien
-6. **Ransomware** - Erkennung und Sofortmaßnahmen
-7. **Software-Updates** - Wichtigkeit kritischer Patches
-8. **WLAN & VPN** - Sicheres Arbeiten unterwegs
-9. **Backup-Strategie** - Datensicherung und Recovery
-10. **DSGVO & Datenschutz** - Rechtliche Anforderungen
-11. **Drucker-Sicherheit** - Pull-Printing und Badge-Authentifizierung
-12. **Risikomanagement** - Meldepflichten und Eskalation
+## 🎮 Controls
 
-### Random Incidents (15 Szenarien)
-- Verdächtige E-Mails und Phishing-Versuche
-- Tailgating und unbefugter Zutritt
-- Gefundene USB-Sticks
-- Social-Engineering-Anrufe
-- Datenpannen und DSGVO-Verstöße
-- Ungesperrte PCs
-- Öffentliche WLANs
-- Malware-Warnungen
-- Und mehr...
-
-## 🎮 Steuerung
-
-### Tastatur
-- **Pfeiltasten (↑ ↓ ← →)** - Spieler bewegen
-- **SPACE / ENTER** - Mit NPCs interagieren / Dialog fortsetzen
-- **ESC** - Dialoge und Feedback-Boxen schließen
+### Keyboard
+- **Arrow Keys (↑ ↓ ← →)** - Move player
+- **SPACE / ENTER** - Interact with NPCs / Continue dialog
+- **ESC** - Close dialogs and feedback boxes
 
 ### Buttons
-- **🔊 Musik-Button** - Hintergrundmusik ein/ausschalten
-- **🚨 INCIDENT AUSLÖSEN** - Manuell ein Security-Incident triggern
-- **🔄 NEUES SPIEL** - Fortschritt zurücksetzen und neu starten
+- **🔊 Music** - Toggle background music
+- **🚨 INCIDENT** - Manually trigger a security incident
+- **🔄 NEW GAME** - Reset progress and start over
 
 ## 🚀 Installation & Start
 
-### Einfache Variante (Lokaler Start)
+### Simple Method
 
-1. Repository klonen oder Dateien herunterladen
-2. `index.html` direkt im Browser öffnen
-3. Spielen! 🎮
+1. Download all files
+2. Open `index.html` in your browser
+3. Play! 🎮
 
-### Mit lokalem Webserver (empfohlen)
+### With Local Web Server (recommended)
 
 ```bash
 # Python 3
 python -m http.server 8000
 
-# Python 2
-python -m SimpleHTTPServer 8000
-
-# Node.js (mit npx)
+# Node.js
 npx http-server
 ```
 
-Dann im Browser öffnen: `http://localhost:8000`
+Then open: `http://localhost:8000`
 
-## 📁 Projektstruktur
+## 📁 Project Structure
 
 ```
-securitygame_wstw/
-├── index.html           # Hauptdatei mit HTML-Struktur & Styling
-├── game.js              # Komplette Spiellogik & Event-Handler
-├── npcs_data.js         # NPC-Definitionen mit allen Quiz-Fragen
-├── incidents_data.js    # Random Security-Incidents
-├── training_data.js     # Schulungsmodul-Inhalte
-└── README.md            # Diese Datei
+securitygame_public/
+├── index.html            # Main file with HTML structure & styling
+├── game.js               # Complete game logic & event handlers
+├── languages.js          # Multi-language translation system
+├── leaderboard.js        # User registration & leaderboard system
+├── npcs_data.js          # German NPC definitions (39 questions)
+├── npcs_data_en.js       # English NPC definitions (39 questions)
+├── incidents_data.js     # German security incidents (15 scenarios)
+├── incidents_data_en.js  # English security incidents (15 scenarios)
+├── training_data.js      # German training module (6 pages)
+├── training_data_en.js   # English training module (6 pages)
+└── README.md             # This file
 ```
 
-## 🎯 Spielablauf
+## 💡 Technical Details
 
-1. **Schulungsmodul** (6 Seiten)
-   - Durchklicken der wichtigsten Security-Grundlagen
-   - Theorie zu allen Themen
-   - "Spiel starten" nach Abschluss
+- **Technology**: HTML5 Canvas, Vanilla JavaScript
+- **Audio**: Web Audio API for 8-bit sounds and music
+- **Graphics**: Pixel art with programmatic drawing
+- **Storage**: localStorage for progress saving (24h)
+- **No external dependencies** - runs completely in browser
 
-2. **Hauptspiel**
-   - Bewege dich durch das virtuelle Wiener Stadtwerke Büro
-   - Sprich mit 12 verschiedenen Security-Experten
-   - Beantworte 3-4 Fragen pro NPC (insgesamt 39 Fragen)
-   - Reagiere auf zufällige Security-Incidents
+## 🎓 Educational Value
 
-3. **Victory Screen**
-   - Detaillierte Statistiken
-   - Badge-Verleihung basierend auf Performance
-   - Zertifikat drucken mit Spielzeit und Erfolgsquote
-   - Bei 100%: Spezielle "Perfect Score" Anerkennung
+### Training Module
+- Comprehensive theoretical foundations
+- Structured knowledge transfer
+- Color-coded hints (yellow/red/green)
+- Practical examples
 
-## 💡 Technische Details
+### Practical Training
+- Realistic scenarios from everyday work
+- Immediate feedback with detailed explanations
+- Repetition: Wrong answers must be repeated
+- Random order: No patterns, no memorization
+- Gamified learning increases motivation and retention
 
-- **Technologie**: HTML5 Canvas, Vanilla JavaScript
-- **Audio**: Web Audio API für 8-Bit-Sounds und Musik
-- **Grafik**: Pixel-Art mit programmatischer Zeichnung
-- **Speicherung**: localStorage für Progress Saving (24h)
-- **Keine externen Dependencies** - läuft komplett im Browser
+## 🏆 Badge System
 
-## 🎨 Design-Entscheidungen
-
-- **Pokemon-inspiriert**: Top-Down-Perspektive, Pixel-Art-Stil, 8-Bit-Musik
-- **Wiener Stadtwerke Branding**: Logo, Farben (Blau #0066CC, Rot #E30613)
-- **Wien IT**: Als IT-Dienstleister erwähnt
-- **Individuelle NPCs**: Jeder NPC hat eigene Farbe, Frisur, Accessoires (Brille, Bart, Hut, etc.)
-- **Gamification**: Punkte, Badges, Zertifikat motivieren zum Lernen
-- **Kein Zeitdruck**: Bewusst keine Timer bei Incidents - stressfreies Lernen
-
-## 🔊 Audio-System
-
-### Musik
-- **Background Music**: Fröhliche 8-Bit-Melodie während des Spiels
-- **Quiz Music**: Spannende Melodie während Quiz-Fragen
-- **Automatischer Wechsel**: Musik passt sich Spielsituation an
-
-### Sound Effects
-- **Richtige Antwort**: Aufsteigende Melodie (C-E-G)
-- **Falsche Antwort**: Absteigende Melodie
-- **NPC Komplett**: Level-Up Jingle
-- **Victory**: Triumph-Fanfare
-- **Interaction**: Kurzer Bestätigungston
-- **Incident**: Alarm-Sound
-
-## 📱 Kompatibilität
-
-- ✅ Alle modernen Browser (Chrome, Firefox, Safari, Edge)
-- ✅ Desktop & Laptop (optimiert für größere Bildschirme)
-- ⚠️ Mobile Geräte (eingeschränkt - Tastatur erforderlich)
-- ✅ localStorage muss aktiviert sein für Progress Saving
-
-## 🎓 Pädagogischer Wert
-
-### Schulungsmodul
-- Umfassende theoretische Grundlagen
-- Strukturierte Wissensvermittlung
-- Farbcodierte Hinweise (Gelb/Rot/Grün)
-- Praxisnahe Beispiele
-
-### Praktisches Training
-- **Realistische Szenarien** aus dem Arbeitsalltag
-- **Sofortiges Feedback** mit ausführlichen Erklärungen
-- **Wiederholung**: Falsche Antworten müssen wiederholt werden
-- **Zufällige Reihenfolge**: Keine Muster, kein Auswendiglernen
-- **Spielerisches Lernen** steigert Motivation und Retention
-
-### Erfolgsmessung
-- Detaillierte Statistiken
-- Badge-System für verschiedene Leistungen
-- Zertifikat mit Zeiterfassung
-- Perfect Score Bonus für 100%
-
-## 🏆 Badge-System
-
-- **🛡️ Security Pro** - Für Abschluss des Trainings (immer)
-- **⚡ Quick Thinker** - Mindestens 5 Incidents richtig gelöst
-- **🎯 Perfect Score** - Mindestens 90% Erfolgsquote
+- **🛡️ Security Pro** - For completing the training (always)
+- **⚡ Quick Thinker** - At least 5 incidents solved correctly
+- **🎯 Perfect Score** - At least 90% success rate
 
 ## 💾 Progress Saving
 
-- **Automatisches Speichern**: Bei jedem Score-Update
-- **24h Gültigkeit**: Speicher verfällt nach einem Tag
-- **Was wird gespeichert**:
-  - Aktueller Score
-  - NPC-Fortschritt (welche Fragen beantwortet)
-  - Verwendete Incidents
-  - Spielzeit
-- **Neues Spiel**: Orange Button zum manuellen Zurücksetzen
+- **Automatic saving**: On every score update
+- **24h validity**: Save expires after one day
+- **What is saved**:
+  - Current score
+  - NPC progress (which questions answered)
+  - Used incidents
+  - Play time
 
-## 🚀 Mögliche Erweiterungen
+## 📱 Compatibility
 
-### Bereits implementiert ✅
-- ✅ Schulungsmodul vor dem Spiel
-- ✅ Mehrere Fragen pro NPC
-- ✅ Random Security Incidents
-- ✅ Badge-System und Zertifikat
-- ✅ Sound Effects
-- ✅ Keyboard Shortcuts
-- ✅ Progress Saving
-- ✅ Time Tracking
-- ✅ Perfect Score Bonus
+- ✅ All modern browsers (Chrome, Firefox, Safari, Edge)
+- ✅ Desktop & Laptop (keyboard controls)
+- ✅ **Mobile & Tablet** (touch controls with swipe gestures)
+- ✅ Responsive design (adapts to screen size)
+- ✅ localStorage must be enabled
 
-### Ideen für die Zukunft
-- 📱 Mobile Touch-Steuerung
-- 🌍 Mehrsprachigkeit (Englisch)
-- 🗺️ Größere Map mit mehreren Räumen
-- 👥 Multiplayer-Modus
-- 📊 Admin-Dashboard mit Team-Statistiken
-- 🎯 Schwierigkeitsstufen
-- 🏅 Erweiterte Achievements
-- 💬 Mehr Incidents und NPCs
+### Mobile Controls:
+- **Swipe** on canvas to move character
+- **Tap** near your character to interact with NPCs
+- All buttons and UI elements are touch-friendly
 
-## 📄 Lizenz
+## 🎮 How to Play
 
-Entwickelt für die **Wiener Stadtwerke GmbH** - Security Awareness Training
-IT-Dienstleister: **Wien IT**
+1. **Enter Your Details**:
+   - Choose your name
+   - Select your language (English or German)
+   - Pick your country
 
-## 👨‍💻 Entwicklung
+2. **Complete Training**:
+   - Read through 6 pages of IT-Security basics
+   - All topics are covered comprehensively
 
-Erstellt mit ❤️ für bessere IT-Sicherheit bei den Wiener Stadtwerken.
+3. **Play the Game**:
+   - Walk around the office (arrow keys)
+   - Talk to 12 security experts (SPACE)
+   - Answer their questions correctly
+   - Handle random security incidents
 
-### Technische Highlights
-- Vollständig in Vanilla JavaScript ohne Frameworks
-- Modulare Datenstruktur (separate Dateien für NPCs, Incidents, Training)
-- Smooth NPC-Bewegungen mit Vektor-Mathematik
-- Responsive Speech Bubbles mit Canvas-Koordinaten
-- Dynamisches Audio-System mit Web Audio API
-- LocalStorage-Integration mit Fehlerbehandlung
+4. **Compete Globally**:
+   - Your score is calculated (points + time bonus)
+   - View the global leaderboard
+   - See your ranking among all players
+   - Print your certificate
+
+## 🏆 Scoring System
+
+- **Base Points**: 100 points per correct answer
+- **Time Bonus**:
+  - Under 10 min: +1000 points
+  - 10-20 min: +800 points
+  - 20-30 min: +600 points
+  - 30-40 min: +400 points
+  - 40-50 min: +200 points
+  - 50-60 min: +100 points
+- **Total Score**: Base Points + Time Bonus
+
+## 🚀 How to Upload to itch.io
+
+1. **Create Account**: Go to https://itch.io and create free account
+2. **Create Project**: Click "Create new project"
+3. **Settings**:
+   - Kind of project: **HTML**
+   - Title: "IT-Security Adventure"
+   - Classification: Educational/Serious Game
+4. **Upload Files**:
+   - ZIP all files (index.html, game.js, languages.js, etc.)
+   - Upload the ZIP file
+   - Check "This file will be played in the browser" ✅
+   - Set index.html as the main file
+5. **Pricing**: Free or "Pay what you want" with suggested donation
+6. **Publish**: Click "Save & view page"
+
+Done! Your game is now live and playable in the browser.
+
+## 📄 License
+
+Open source educational game for security awareness training.
+
+## 👨‍💻 Development
+
+Created with ❤️ and Claude Code for better IT security awareness.
+
+### Technical Highlights
+- Fully vanilla JavaScript without frameworks
+- Modular data structure (separate files for NPCs, incidents, training)
+- Smooth NPC movements with vector mathematics
+- Responsive speech bubbles with canvas coordinates
+- Dynamic audio system with Web Audio API
+- LocalStorage integration with error handling
 
 ---
 
-**Viel Spaß beim Spielen und Lernen! 🛡️🎮**
+**Have fun playing and learning! 🛡️🎮**
 
 *Stay secure, stay aware!*

@@ -1,10 +1,10 @@
-// IT-Security Training Content for Wiener Stadtwerke
+// IT-Security Training Content for TechCorp Industries
 const trainingPages = [
     {
         title: "🛡️ Willkommen zum IT-Security Training",
         content: `
             <p style="font-size: 18px; margin-bottom: 20px;">
-                Willkommen beim IT-Security Awareness Training der <strong>Wiener Stadtwerke</strong>!
+                Willkommen beim IT-Security Awareness Training der <strong>TechCorp Industries</strong>!
             </p>
             <p>
                 In diesem Training lernen Sie die wichtigsten Grundlagen der IT-Sicherheit kennen.
@@ -20,7 +20,7 @@ const trainingPages = [
             </div>
 
             <p style="margin-top: 20px;">
-                <strong>IT-Dienstleister:</strong> Wien IT<br>
+                <strong>IT-Dienstleister:</strong> IT Services Team<br>
                 <strong>Ziel:</strong> Sicheres Arbeiten im digitalen Zeitalter
             </p>
 
@@ -219,9 +219,9 @@ const trainingPages = [
 
             <div class="training-highlight">
                 <strong>📢 Melden Sie Risiken an:</strong><br>
-                • Ihren direkten Vorgesetzten<br>
+                • Ihren direkten supervisor<br>
                 • IT-Security Team<br>
-                • Konzernsicherheit (bei schwerwiegenden Vorfällen)<br>
+                • security team (bei schwerwiegenden Vorfällen)<br>
                 • Datenschutzbeauftragten (bei DSGVO-Verstößen)
             </div>
 

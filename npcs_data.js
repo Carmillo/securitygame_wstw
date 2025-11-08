@@ -71,7 +71,7 @@ const npcsData = [
                     { text: 'Passwort123', correct: false },
                     { text: 'MeinName2024', correct: false },
                     { text: 'asd!K9$mP2@xL7#qR', correct: true },
-                    { text: 'WienerStadtwerke', correct: false }
+                    { text: 'SecurePass123', correct: false }
                 ],
                 correctExplanation: 'Perfekt! Lange, zufällige Passwörter mit Sonderzeichen sind am sichersten. Verwende einen Passwort-Manager!',
                 wrongExplanation: 'Leider nicht sicher genug! Einfache Wörter und vorhersehbare Muster sind leicht zu knacken. Ein sicheres Passwort sollte lang sein (mindestens 12 Zeichen), Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten. Am besten nutzt du einen Passwort-Manager!'
@@ -107,7 +107,7 @@ const npcsData = [
                     { text: 'Passwort per E-Mail schicken', correct: false }
                 ],
                 correctExplanation: 'Richtig! Passwörter sind persönlich und dürfen NIEMALS geteilt werden - auch nicht mit Kollegen. Biete an, die Aufgabe selbst zu erledigen!',
-                wrongExplanation: 'Falsch! Passwörter sind PERSÖNLICH und dürfen niemals geteilt werden - selbst nicht mit Kollegen oder Vorgesetzten. Du bist für alles verantwortlich, was mit deinem Account passiert!'
+                wrongExplanation: 'Falsch! Passwörter sind PERSÖNLICH und dürfen niemals geteilt werden - selbst nicht mit Kollegen oder supervisor. Du bist für alles verantwortlich, was mit deinem Account passiert!'
             }
         ]
     },
@@ -369,7 +369,7 @@ const npcsData = [
         accessories: { hair: 'long', hairColor: '#000', glasses: true, skinColor: '#8d5524' },
         name: 'WLAN-Spezialistin Nina',
         title: 'WLAN-Sicherheits-Profi',
-        joke: 'Öffentliches WLAN ohne VPN? Das ist wie nackt durch Wien spazieren! 📡🙈',
+        joke: 'Öffentliches WLAN ohne VPN? Das ist wie nackt herumlaufen! 📡🙈',
         dialog: [
             'Hey! Ich kümmere mich um WLAN-Sicherheit.',
             'Öffentliche Netzwerke bergen Risiken!',
@@ -580,12 +580,12 @@ const npcsData = [
                 question: 'Du entdeckst ein Sicherheitsrisiko in der Firma. An wen meldest du es?',
                 options: [
                     { text: 'Nur Kollegen erzählen', correct: false },
-                    { text: 'Vorgesetzten oder Konzernsicherheit informieren', correct: true },
+                    { text: 'supervisor oder security team informieren', correct: true },
                     { text: 'Ignorieren, ist nicht mein Problem', correct: false },
                     { text: 'In Social Media posten', correct: false }
                 ],
-                correctExplanation: 'Richtig! Sicherheitsrisiken IMMER dem Vorgesetzten oder der Konzernsicherheit melden. Nur so können Maßnahmen ergriffen werden!',
-                wrongExplanation: 'Falsch! Sicherheitsrisiken müssen offiziell gemeldet werden - an deinen Vorgesetzten oder direkt an die Konzernsicherheit. Nur Kollegen informieren oder ignorieren ist gefährlich!'
+                correctExplanation: 'Richtig! Sicherheitsrisiken IMMER dem supervisor oder der security team melden. Nur so können Maßnahmen ergriffen werden!',
+                wrongExplanation: 'Falsch! Sicherheitsrisiken müssen offiziell gemeldet werden - an deinen supervisor oder direkt an die security team. Nur Kollegen informieren oder ignorieren ist gefährlich!'
             },
             {
                 question: 'Was ist ein Sicherheitsrisiko, das gemeldet werden muss?',

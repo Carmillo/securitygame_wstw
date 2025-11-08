@@ -1,4 +1,4 @@
-// IT-Security Adventure Game for Wiener Stadtwerke
+// IT-Security Adventure Game for TechCorp Industries
 // Pokemon-style top-down game with 8-bit music
 
 // Training system
@@ -59,27 +59,45 @@ let backgroundMusicTimeout = null;
 let quizMusicTimeout = null;
 let isQuizMusicPlaying = false;
 
-// Load NPCs from external file (npcs_data.js)
-const npcs = npcsData;
-
-// Calculate total questions
+// Load NPCs from external file (language-aware)
+let npcs = [];
 let totalQuestions = 0;
-npcs.forEach(npc => {
-    totalQuestions += npc.quizzes.length;
-});
 
-// Initialize NPC progress tracking and targets
-npcs.forEach(npc => {
-    npcProgress[npc.id] = {
-        currentQuestion: 0,
-        completed: false
-    };
-    // Initialize target position same as current position
-    npcTargets[npc.id] = { x: npc.x, y: npc.y };
-});
+// Function to load language-specific data
+function loadLanguageData() {
+    // Select data based on current language
+    if (currentLanguage === 'en') {
+        npcs = typeof npcsDataEn !== 'undefined' ? npcsDataEn : npcsData;
+    } else {
+        npcs = npcsData;
+    }
 
-// Update score display with total
-document.getElementById('totalQuestions').textContent = totalQuestions;
+    // Calculate total questions
+    totalQuestions = 0;
+    npcs.forEach(npc => {
+        totalQuestions += npc.quizzes.length;
+    });
+
+    // Initialize NPC progress tracking and targets
+    npcs.forEach(npc => {
+        if (!npcProgress[npc.id]) {
+            npcProgress[npc.id] = {
+                currentQuestion: 0,
+                completed: false
+            };
+        }
+        // Initialize target position same as current position
+        if (!npcTargets[npc.id]) {
+            npcTargets[npc.id] = { x: npc.x, y: npc.y };
+        }
+    });
+
+    // Update score display with total
+    document.getElementById('totalQuestions').textContent = totalQuestions;
+}
+
+// Initialize with default data
+loadLanguageData();
 
 // Walls and obstacles
 const walls = [
@@ -231,7 +249,10 @@ document.getElementById('musicToggle').addEventListener('click', function() {
     initAudio();
 
     musicPlaying = !musicPlaying;
-    this.textContent = musicPlaying ? '🔊 Musik: AN' : '🔇 Musik: AUS';
+    const musicText = musicPlaying ?
+        (currentLanguage === 'en' ? `🔊 ${t('ui.music')}: ${t('ui.musicOn')}` : `🔊 ${t('ui.music')}: ${t('ui.musicOn')}`) :
+        (currentLanguage === 'en' ? `🔇 ${t('ui.music')}: ${t('ui.musicOff')}` : `🔇 ${t('ui.music')}: ${t('ui.musicOff')}`);
+    this.textContent = musicText;
 
     if (musicPlaying) {
         if (isQuizMusicPlaying) {
@@ -248,20 +269,11 @@ document.getElementById('musicToggle').addEventListener('click', function() {
     }
 });
 
-// Manual incident trigger button
-document.getElementById('incidentTrigger').addEventListener('click', function() {
-    if (!incidentActive && !dialogActive && !quizActive) {
-        triggerRandomIncident();
-        this.style.background = '#cc0000';
-        setTimeout(() => {
-            this.style.background = '#ff0000';
-        }, 200);
-    }
-});
+// Manual incident trigger button removed (was for development only)
 
 // New game button
 document.getElementById('newGameButton').addEventListener('click', function() {
-    if (confirm('Möchtest du wirklich ein neues Spiel starten? Dein aktueller Fortschritt geht verloren!')) {
+    if (confirm(t('ui.newGameConfirm'))) {
         clearProgress();
         location.reload();
     }
@@ -346,6 +358,12 @@ document.addEventListener('keyup', (e) => {
 
 // Handle spacebar for interactions
 function handleSpaceBar() {
+    // First priority: Dismiss welcome overlay if showing
+    if (score === 0 && !welcomeShown && trainingComplete) {
+        welcomeShown = true;
+        return;
+    }
+
     // Block spacebar during quiz, incidents, transitions, or feedback
     if (quizActive || isTransitioning || incidentActive) {
         return;
@@ -378,7 +396,10 @@ function checkNPCInteraction() {
                 interactWithNPC(npc);
                 playInteractionSound();
             } else {
-                showDialog(`Du hast alle Fragen von ${npc.name} gemeistert! 🎉`, 'System');
+                const message = currentLanguage === 'en' ?
+                    `You've mastered all questions from ${npc.name}! 🎉` :
+                    `Du hast alle Fragen von ${npc.name} gemeistert! 🎉`;
+                showDialog(message, 'System');
             }
             return;
         }
@@ -423,13 +444,17 @@ function closeDialog() {
 // Show quiz
 function showQuiz(npc) {
     quizActive = true;
+    hideSpeechBubble(); // Ensure speech bubble is hidden during quiz
     const progress = npcProgress[npc.id];
     const quiz = npc.quizzes[progress.currentQuestion];
 
     // Show progress in question text
     const questionNumber = progress.currentQuestion + 1;
     const totalQuestions = npc.quizzes.length;
-    document.getElementById('quizQuestion').textContent = `Frage ${questionNumber}/${totalQuestions}: ${quiz.question}`;
+    const questionText = currentLanguage === 'en' ?
+        `${t('quiz.question')} ${questionNumber}/${totalQuestions}: ${quiz.question}` :
+        `${t('quiz.question')} ${questionNumber}/${totalQuestions}: ${quiz.question}`;
+    document.getElementById('quizQuestion').textContent = questionText;
 
     const optionsContainer = document.getElementById('quizOptions');
     optionsContainer.innerHTML = '';
@@ -491,7 +516,7 @@ function showFeedback(isCorrect, explanation, npcId) {
 
     if (isCorrect) {
         feedbackIcon.textContent = '✅';
-        feedbackTitle.textContent = 'Richtig!';
+        feedbackTitle.textContent = t('quiz.correct');
         feedbackTitle.className = 'feedback-title correct';
 
         // Move to next question if correct
@@ -505,7 +530,7 @@ function showFeedback(isCorrect, explanation, npcId) {
         }
     } else {
         feedbackIcon.textContent = '❌';
-        feedbackTitle.textContent = 'Nicht ganz richtig!';
+        feedbackTitle.textContent = t('quiz.wrong');
         feedbackTitle.className = 'feedback-title wrong';
         // Don't advance question on wrong answer - try again
     }
@@ -553,6 +578,12 @@ function showVictoryMessage() {
     // Calculate stats
     const npcQuestions = totalQuestions;
     const successRate = Math.round((score / (totalQuestions + incidentScore)) * 100);
+    const playTimeMinutes = gameStartTime ? Math.floor((Date.now() - gameStartTime) / 1000 / 60) : 0;
+
+    // Submit to leaderboard
+    if (typeof submitToLeaderboard === 'function') {
+        submitToLeaderboard(score, score, totalQuestions + incidentScore, playTimeMinutes, incidentScore);
+    }
 
     // Show victory screen
     document.getElementById('victoryScreen').classList.add('show');
@@ -580,7 +611,10 @@ function showVictoryMessage() {
     // Check for perfect score (bonus message)
     if (successRate === 100 && score === totalQuestions + incidentScore) {
         setTimeout(() => {
-            alert('🎉 PERFEKT! Du hast 100% erreicht!\n\n🏅 Du bist ein echter Security-Experte!\n\nDieses Ergebnis wird im Zertifikat hervorgehoben.');
+            const perfectMsg = currentLanguage === 'en' ?
+                '🎉 PERFECT! You achieved 100%!\n\n🏅 You are a true Security Expert!\n\nThis result will be highlighted on your certificate.' :
+                '🎉 PERFEKT! Du hast 100% erreicht!\n\n🏅 Du bist ein echter Security-Experte!\n\nDieses Ergebnis wird im Zertifikat hervorgehoben.';
+            alert(perfectMsg);
         }, 1500);
     }
 
@@ -603,24 +637,53 @@ function playVictorySound() {
 
 // Print certificate function
 function printCertificate() {
-    const userName = prompt('Dein Name für das Zertifikat:') || 'Security Champion';
-    const today = new Date().toLocaleDateString('de-AT');
+    const promptText = currentLanguage === 'en' ?
+        'Your name for the certificate:' :
+        'Dein Name für das Zertifikat:';
+    const userName = prompt(promptText) || 'Security Champion';
+    const locale = currentLanguage === 'en' ? 'en-US' : 'de-AT';
+    const today = new Date().toLocaleDateString(locale);
 
     // Calculate time spent
     const totalTime = gameStartTime ? Math.floor((Date.now() - gameStartTime) / 1000 / 60) : 0; // minutes
-    const timeText = totalTime > 0 ? `Bearbeitungszeit: ${totalTime} Minuten` : '';
+    const timeLabel = currentLanguage === 'en' ? 'Processing time' : 'Bearbeitungszeit';
+    const minutesLabel = currentLanguage === 'en' ? 'minutes' : 'Minuten';
+    const timeText = totalTime > 0 ? `${timeLabel}: ${totalTime} ${minutesLabel}` : '';
 
     // Check for perfect score
     const successRate = Math.round((score / (totalQuestions + incidentScore)) * 100);
     const isPerfect = successRate === 100 && score === totalQuestions + incidentScore;
-    const perfectText = isPerfect ? '<p style="color: #ffd700; font-size: 28px; margin-top: 20px;"><strong>🏅 PERFEKT! 100% erreicht! 🏅</strong></p>' : '';
+    const perfectTextContent = currentLanguage === 'en' ?
+        '🏅 PERFECT! 100% achieved! 🏅' :
+        '🏅 PERFEKT! 100% erreicht! 🏅';
+    const perfectText = isPerfect ? `<p style="color: #ffd700; font-size: 28px; margin-top: 20px;"><strong>${perfectTextContent}</strong></p>` : '';
+
+    // Translations for certificate
+    const certTitle = currentLanguage === 'en' ? 'CERTIFICATE' : 'ZERTIFIKAT';
+    const certSubtitle = currentLanguage === 'en' ?
+        'IT-Security Awareness Training' :
+        'IT-Security Awareness Training';
+    const certText1 = currentLanguage === 'en' ?
+        'This certifies that' :
+        'Hiermit wird bescheinigt, dass';
+    const certText2 = currentLanguage === 'en' ?
+        'has successfully completed the IT-Security Awareness Training of' :
+        'das IT-Security Awareness Training der';
+    const certText3 = currentLanguage === 'en' ?
+        'successfully completed.' :
+        'erfolgreich absolviert hat.';
+    const pointsLabel = currentLanguage === 'en' ? 'Points achieved' : 'Erreichte Punkte';
+    const successLabel = currentLanguage === 'en' ? 'Success rate' : 'Erfolgsquote';
+    const providerText = currentLanguage === 'en' ?
+        'IT Service Provider: IT Services Team' :
+        'IT-Dienstleister: IT Services Team';
 
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
-            <title>IT-Security Zertifikat</title>
+            <title>IT-Security ${certTitle}</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -652,25 +715,25 @@ function printCertificate() {
                     <circle cx="50" cy="50" r="35" fill="#E30613"/>
                     <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">W</text>
                 </svg>
-                <h1>🏆 ZERTIFIKAT 🏆</h1>
-                <h2>IT-Security Awareness Training</h2>
-                <p>Hiermit wird bescheinigt, dass</p>
+                <h1>🏆 ${certTitle} 🏆</h1>
+                <h2>${certSubtitle}</h2>
+                <p>${certText1}</p>
                 <div class="name">${userName}</div>
-                <p>das IT-Security Awareness Training der</p>
-                <p><strong>Wiener Stadtwerke GmbH</strong></p>
-                <p>erfolgreich absolviert hat.</p>
+                <p>${certText2}</p>
+                <p><strong>TechCorp Industries GmbH</strong></p>
+                <p>${certText3}</p>
                 <div class="score">
-                    <p>Erreichte Punkte: <strong>${score}</strong></p>
-                    <p>Erfolgsquote: <strong>${successRate}%</strong></p>
+                    <p>${pointsLabel}: <strong>${score}</strong></p>
+                    <p>${successLabel}: <strong>${successRate}%</strong></p>
                     ${timeText ? `<p>${timeText}</p>` : ''}
                     ${perfectText}
                 </div>
                 <div class="date">
-                    <p>Wien, ${today}</p>
+                    <p>${today}</p>
                 </div>
                 <p style="margin-top: 40px; font-size: 12px; color: #666;">
-                    IT-Dienstleister: Wien IT<br>
-                    Security Awareness Game - Wiener Stadtwerke
+                    ${providerText}<br>
+                    Security Awareness Game - TechCorp Industries
                 </p>
             </div>
         </body>
@@ -957,18 +1020,33 @@ function render() {
     ctx.fillRect(0, 0, canvas.width, 40);
     ctx.fillStyle = '#00d9ff';
     ctx.font = 'bold 20px Courier New';
-    ctx.fillText('🛡️ IT-Security Büro - Wiener Stadtwerke', 180, 27);
+    ctx.fillText('🛡️ IT-Security Büro - TechCorp Industries', 180, 27);
 
-    // Draw instructions if no quizzes completed (show only for first 5 seconds)
+    // Draw instructions if no quizzes completed (dismissable with SPACE)
     if (score === 0 && !welcomeShown) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-        ctx.fillRect(200, 250, 400, 100);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.fillRect(200, 230, 400, 130);
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 16px Courier New';
-        ctx.fillText('Willkommen im IT-Security Training!', 230, 280);
+        const welcomeText = currentLanguage === 'en' ?
+            'Welcome to IT-Security Training!' :
+            'Willkommen im IT-Security Training!';
+        const instructText1 = currentLanguage === 'en' ?
+            'Walk to the NPCs and press SPACE' :
+            'Gehe zu den NPCs und drücke SPACE';
+        const instructText2 = currentLanguage === 'en' ?
+            'to start IT-Security Challenges!' :
+            'um IT-Security Challenges zu starten!';
+        const dismissText = currentLanguage === 'en' ?
+            'Press SPACE to dismiss this message' :
+            'Drücke SPACE um diese Nachricht zu schließen';
+        ctx.fillText(welcomeText, 230, 265);
         ctx.font = '14px Courier New';
-        ctx.fillText('Gehe zu den NPCs mit ! und drücke SPACE', 220, 310);
-        ctx.fillText('um IT-Security Challenges zu starten!', 230, 330);
+        ctx.fillText(instructText1, 230, 295);
+        ctx.fillText(instructText2, 230, 320);
+        ctx.fillStyle = '#00d9ff';
+        ctx.font = 'bold 12px Courier New';
+        ctx.fillText(dismissText, 230, 345);
     }
 }
 
@@ -1015,13 +1093,21 @@ function scheduleNextIncident() {
 
 // Trigger random incident
 function triggerRandomIncident() {
+    // Select incident data based on language
+    let incidents;
+    if (currentLanguage === 'en') {
+        incidents = typeof incidentsDataEn !== 'undefined' ? incidentsDataEn : incidentsData;
+    } else {
+        incidents = incidentsData;
+    }
+
     // Get unused incidents
-    const availableIncidents = incidentsData.filter(inc => !usedIncidents.has(inc.id));
+    const availableIncidents = incidents.filter(inc => !usedIncidents.has(inc.id));
 
     // If all used, reset
     if (availableIncidents.length === 0) {
         usedIncidents.clear();
-        availableIncidents.push(...incidentsData);
+        availableIncidents.push(...incidents);
     }
 
     // Pick random incident
@@ -1077,7 +1163,11 @@ function handleIncidentAnswer(correct, explanation, optionDiv) {
 
         setTimeout(() => {
             closeIncident();
-            showDialog(`✅ Richtig! +1 Punkt\n\n${explanation}`, 'Incident gelöst');
+            const message = currentLanguage === 'en' ?
+                `✅ Correct! +1 Point\n\n${explanation}` :
+                `✅ Richtig! +1 Punkt\n\n${explanation}`;
+            const title = currentLanguage === 'en' ? 'Incident Resolved' : 'Incident gelöst';
+            showDialog(message, title);
             scheduleNextIncident();
         }, 1500);
     } else {
@@ -1086,7 +1176,10 @@ function handleIncidentAnswer(correct, explanation, optionDiv) {
 
         setTimeout(() => {
             closeIncident();
-            showDialog(`❌ Falsch!\n\n${explanation}`, 'Incident');
+            const message = currentLanguage === 'en' ?
+                `❌ Wrong!\n\n${explanation}` :
+                `❌ Falsch!\n\n${explanation}`;
+            showDialog(message, 'Incident');
             scheduleNextIncident();
         }, 1500);
     }
@@ -1153,12 +1246,12 @@ function showSpeechBubble(npc) {
     document.getElementById('speechTitle').textContent = npc.title || 'IT-Security';
     document.getElementById('speechJoke').textContent = npc.joke || 'Hallo! 👋';
 
-    // Position bubble much higher above NPC to not block player
+    // Position bubble below NPC to not block player
     const canvas = document.getElementById('gameCanvas');
     const rect = canvas.getBoundingClientRect();
 
     bubble.style.left = (rect.left + npc.x - 150) + 'px';
-    bubble.style.top = (rect.top + npc.y - 200) + 'px'; // Moved higher (was -120, now -200)
+    bubble.style.top = (rect.top + npc.y + 60) + 'px'; // Below NPC
 
     bubble.classList.add('show');
 }
@@ -1211,12 +1304,41 @@ function moveNPCsRandomly() {
             return;
         }
 
-        // Random new position within bounds
-        const newX = 100 + Math.random() * 600;
-        const newY = 100 + Math.random() * 400;
+        // Try to find a valid position that's not too close to other NPCs
+        let attempts = 0;
+        let newX, newY, validPosition = false;
 
-        // Check if position is valid (not on wall)
-        if (!checkCollision(newX, newY)) {
+        while (attempts < 10 && !validPosition) {
+            // Random new position within bounds
+            newX = 100 + Math.random() * 600;
+            newY = 100 + Math.random() * 400;
+
+            // Check if position is valid (not on wall)
+            if (checkCollision(newX, newY)) {
+                attempts++;
+                continue;
+            }
+
+            // Check distance to other NPCs (keep at least 120 pixels apart)
+            validPosition = true;
+            for (let otherNpc of npcs) {
+                if (otherNpc.id === npc.id) continue;
+
+                const dist = Math.sqrt(
+                    Math.pow(newX - otherNpc.x, 2) +
+                    Math.pow(newY - otherNpc.y, 2)
+                );
+
+                if (dist < 120) {
+                    validPosition = false;
+                    break;
+                }
+            }
+
+            attempts++;
+        }
+
+        if (validPosition) {
             // Set new target instead of instant teleport
             npcTargets[npc.id] = { x: newX, y: newY };
         }
@@ -1232,19 +1354,40 @@ setInterval(() => {
 
 // Initialize training on page load
 function initTraining() {
-    if (typeof trainingPages === 'undefined') {
+    // Select training data based on language
+    let trainingData;
+    if (currentLanguage === 'en') {
+        trainingData = typeof trainingPagesEn !== 'undefined' ? trainingPagesEn : trainingPages;
+    } else {
+        trainingData = trainingPages;
+    }
+
+    if (typeof trainingData === 'undefined') {
         console.error('Training data not loaded!');
         startGame();
         return;
     }
 
+    // Show training module
+    document.getElementById('trainingModule').classList.remove('hidden');
+
+    // Store in window for access by other functions
+    window.currentTrainingData = trainingData;
+
     // Update total pages
-    document.getElementById('trainingPageTotal').textContent = trainingPages.length;
+    document.getElementById('trainingPageTotal').textContent = trainingData.length;
 
     // Render first page
     renderTrainingPage(0);
 
-    // Set up navigation
+    // Set up navigation (remove old listeners first)
+    const nextBtn = document.getElementById('trainingNext');
+    const prevBtn = document.getElementById('trainingPrev');
+    const newNextBtn = nextBtn.cloneNode(true);
+    const newPrevBtn = prevBtn.cloneNode(true);
+    nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+    prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+
     document.getElementById('trainingNext').addEventListener('click', nextTrainingPage);
     document.getElementById('trainingPrev').addEventListener('click', prevTrainingPage);
 }
@@ -1254,7 +1397,8 @@ function renderTrainingPage(pageIndex) {
     const content = document.getElementById('trainingContent');
     content.innerHTML = '';
 
-    const page = trainingPages[pageIndex];
+    const trainingData = window.currentTrainingData || trainingPages;
+    const page = trainingData[pageIndex];
     const pageDiv = document.createElement('div');
     pageDiv.className = 'training-page active';
     pageDiv.innerHTML = `
@@ -1276,18 +1420,19 @@ function renderTrainingPage(pageIndex) {
         prevBtn.style.visibility = 'visible';
     }
 
-    if (pageIndex === trainingPages.length - 1) {
-        nextBtn.textContent = '🎮 Spiel starten!';
+    if (pageIndex === trainingData.length - 1) {
+        nextBtn.textContent = currentLanguage === 'en' ? '🎮 Start Game!' : '🎮 Spiel starten!';
         nextBtn.style.background = '#28a745';
     } else {
-        nextBtn.textContent = 'Weiter →';
+        nextBtn.textContent = currentLanguage === 'en' ? 'Next →' : 'Weiter →';
         nextBtn.style.background = '#0066CC';
     }
 }
 
 // Next training page
 function nextTrainingPage() {
-    if (currentTrainingPage < trainingPages.length - 1) {
+    const trainingData = window.currentTrainingData || trainingPages;
+    if (currentTrainingPage < trainingData.length - 1) {
         currentTrainingPage++;
         renderTrainingPage(currentTrainingPage);
     } else {
@@ -1321,13 +1466,19 @@ function startGame() {
         if (!trainingComplete) return;
         initAudio();
         musicPlaying = true;
-        document.getElementById('musicToggle').textContent = '🔊 Musik: AN';
+        const musicText = currentLanguage === 'en' ?
+            `🔊 ${t('ui.music')}: ${t('ui.musicOn')}` :
+            `🔊 ${t('ui.music')}: ${t('ui.musicOn')}`;
+        document.getElementById('musicToggle').textContent = musicText;
         playBackgroundMusic();
     }, 1000);
 }
 
-// Initialize training when page loads
-window.addEventListener('DOMContentLoaded', () => {
+// Start game with selected language (called from leaderboard.js after registration)
+function startGameWithLanguage() {
+    // Reload language-specific data
+    loadLanguageData();
+
     // Try to load saved progress
     const hasProgress = loadProgress();
 
@@ -1339,4 +1490,103 @@ window.addEventListener('DOMContentLoaded', () => {
         // Show training
         initTraining();
     }
+}
+
+// Initialize training when page loads
+window.addEventListener('DOMContentLoaded', () => {
+    // Note: Registration overlay handles initial setup
+    // startGameWithLanguage() will be called after registration
 });
+
+// ===== MOBILE TOUCH CONTROLS =====
+
+// Virtual D-Pad for mobile
+let touchStartX = 0;
+let touchStartY = 0;
+let isTouching = false;
+
+// Add touch controls to canvas
+const canvas = document.getElementById('gameCanvas');
+
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    touchStartX = touch.clientX - rect.left;
+    touchStartY = touch.clientY - rect.top;
+    isTouching = true;
+
+    // Check if tapping on NPC area for interaction (like SPACE)
+    const canvasX = (touchStartX / rect.width) * canvas.width;
+    const canvasY = (touchStartY / rect.height) * canvas.height;
+
+    // If tapping near player, treat as interaction
+    const distToPlayer = Math.sqrt(
+        Math.pow(canvasX - player.x, 2) +
+        Math.pow(canvasY - player.y, 2)
+    );
+
+    if (distToPlayer < 50) {
+        handleSpaceBar(); // Trigger interaction
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isTouching) return;
+
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const currentX = touch.clientX - rect.left;
+    const currentY = touch.clientY - rect.top;
+
+    // Calculate direction based on swipe
+    const deltaX = currentX - touchStartX;
+    const deltaY = currentY - touchStartY;
+
+    // Clear all keys first
+    keys['ArrowUp'] = false;
+    keys['ArrowDown'] = false;
+    keys['ArrowLeft'] = false;
+    keys['ArrowRight'] = false;
+
+    // Set direction based on largest delta (with dead zone)
+    const deadZone = 10;
+    if (Math.abs(deltaX) > deadZone || Math.abs(deltaY) > deadZone) {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal movement
+            if (deltaX > 0) {
+                keys['ArrowRight'] = true;
+            } else {
+                keys['ArrowLeft'] = true;
+            }
+        } else {
+            // Vertical movement
+            if (deltaY > 0) {
+                keys['ArrowDown'] = true;
+            } else {
+                keys['ArrowUp'] = true;
+            }
+        }
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    isTouching = false;
+    // Stop movement
+    keys['ArrowUp'] = false;
+    keys['ArrowDown'] = false;
+    keys['ArrowLeft'] = false;
+    keys['ArrowRight'] = false;
+}, { passive: false });
+
+// Prevent double-tap zoom on mobile
+let lastTouchEnd = 0;
+canvas.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+    }
+    lastTouchEnd = now;
+}, { passive: false });
