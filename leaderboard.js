@@ -88,7 +88,12 @@ function initializeRegistration() {
         document.getElementById('registrationOverlay').style.display = 'none';
 
         // Start game (trigger training module)
-        startGameWithLanguage();
+        // Use setTimeout to ensure game.js is fully loaded
+        setTimeout(() => {
+            if (typeof startGameWithLanguage === 'function') {
+                startGameWithLanguage();
+            }
+        }, 100);
     });
 
     // Check if user already registered
@@ -100,7 +105,11 @@ function initializeRegistration() {
             userData = saved;
             setLanguage(userData.language);
             document.getElementById('registrationOverlay').style.display = 'none';
-            startGameWithLanguage();
+            setTimeout(() => {
+                if (typeof startGameWithLanguage === 'function') {
+                    startGameWithLanguage();
+                }
+            }, 100);
         }
     }
 }

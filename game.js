@@ -28,6 +28,11 @@ let player = {
     animationCounter: 0
 };
 
+// Detect if device is touch-enabled
+const isTouchDevice = ('ontouchstart' in window) ||
+                      (navigator.maxTouchPoints > 0) ||
+                      (navigator.msMaxTouchPoints > 0);
+
 let keys = {};
 let dialogActive = false;
 let quizActive = false;
@@ -1031,15 +1036,15 @@ function render() {
         const welcomeText = currentLanguage === 'en' ?
             'Welcome to IT-Security Training!' :
             'Willkommen im IT-Security Training!';
-        const instructText1 = currentLanguage === 'en' ?
-            'Walk to the NPCs and press SPACE' :
-            'Gehe zu den NPCs und drücke SPACE';
+        const instructText1 = isTouchDevice ?
+            (currentLanguage === 'en' ? 'Walk to the NPCs and tap to interact' : 'Gehe zu den NPCs und tippe zum Interagieren') :
+            (currentLanguage === 'en' ? 'Walk to the NPCs and press SPACE' : 'Gehe zu den NPCs und drücke SPACE');
         const instructText2 = currentLanguage === 'en' ?
             'to start IT-Security Challenges!' :
             'um IT-Security Challenges zu starten!';
-        const dismissText = currentLanguage === 'en' ?
-            'Press SPACE to dismiss this message' :
-            'Drücke SPACE um diese Nachricht zu schließen';
+        const dismissText = isTouchDevice ?
+            (currentLanguage === 'en' ? 'Tap anywhere to dismiss' : 'Tippe irgendwo um zu schließen') :
+            (currentLanguage === 'en' ? 'Press SPACE to dismiss this message' : 'Drücke SPACE um diese Nachricht zu schließen');
         ctx.fillText(welcomeText, 230, 265);
         ctx.font = '14px Courier New';
         ctx.fillText(instructText1, 230, 295);
@@ -1494,9 +1499,33 @@ function startGameWithLanguage() {
 
 // Initialize training when page loads
 window.addEventListener('DOMContentLoaded', () => {
+    // Update UI text based on device type
+    updateUIForDeviceType();
+
     // Note: Registration overlay handles initial setup
     // startGameWithLanguage() will be called after registration
 });
+
+// Update UI text for touch vs keyboard devices
+function updateUIForDeviceType() {
+    const dialogContinue = document.getElementById('dialogContinue');
+
+    if (isTouchDevice) {
+        // Update dialog continue hint for touch devices
+        if (currentLanguage === 'en') {
+            dialogContinue.textContent = '▼ TAP to continue';
+        } else {
+            dialogContinue.textContent = '▼ TIPPEN zum Fortfahren';
+        }
+    } else {
+        // Keep SPACE hint for keyboard devices
+        if (currentLanguage === 'en') {
+            dialogContinue.textContent = '▼ SPACE to continue';
+        } else {
+            dialogContinue.textContent = '▼ SPACE zum Fortfahren';
+        }
+    }
+}
 
 // ===== MOBILE TOUCH CONTROLS =====
 
@@ -1505,9 +1534,7 @@ let touchStartX = 0;
 let touchStartY = 0;
 let isTouching = false;
 
-// Add touch controls to canvas
-const canvas = document.getElementById('gameCanvas');
-
+// Add touch controls to canvas (canvas already declared at top of file)
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const touch = e.touches[0];
@@ -1515,6 +1542,12 @@ canvas.addEventListener('touchstart', (e) => {
     touchStartX = touch.clientX - rect.left;
     touchStartY = touch.clientY - rect.top;
     isTouching = true;
+
+    // Dismiss welcome overlay if showing
+    if (score === 0 && !welcomeShown && trainingComplete) {
+        welcomeShown = true;
+        return;
+    }
 
     // Check if tapping on NPC area for interaction (like SPACE)
     const canvasX = (touchStartX / rect.width) * canvas.width;
@@ -1590,3 +1623,14 @@ canvas.addEventListener('touchend', (e) => {
     }
     lastTouchEnd = now;
 }, { passive: false });
+
+// Add touch handler for dialog box (to close it like SPACE)
+const dialogBox = document.getElementById('dialogBox');
+if (dialogBox && isTouchDevice) {
+    dialogBox.addEventListener('touchend', (e) => {
+        if (dialogActive && !quizActive) {
+            e.preventDefault();
+            closeDialog();
+        }
+    }, { passive: false });
+}
