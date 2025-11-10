@@ -9,6 +9,7 @@ const GameState = {
     scene: null,
     camera: null,
     renderer: null,
+    composer: null, // Post-processing composer
     world: null, // Physics world
     clock: new THREE.Clock(),
 
@@ -55,12 +56,178 @@ const GameState = {
     // Incidents
     incidents: [],
     usedIncidents: [],
-    incidentTimer: null
+    incidentTimer: null,
+
+    // Graphics
+    textures: {},
+    particleSystems: []
 };
+
+// ==================== TEXTURES & MATERIALS ====================
+function createProceduralTextures() {
+    console.log('Creating procedural textures...');
+
+    // Wood texture for desks
+    GameState.textures.wood = createWoodTexture();
+
+    // Carpet texture for floor
+    GameState.textures.carpet = createCarpetTexture();
+
+    // Metal texture
+    GameState.textures.metal = createMetalTexture();
+
+    // Concrete texture for walls
+    GameState.textures.concrete = createConcreteTexture();
+
+    // Fabric texture for chairs
+    GameState.textures.fabric = createFabricTexture();
+}
+
+function createWoodTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    // Base wood color
+    const gradient = ctx.createLinearGradient(0, 0, 512, 0);
+    gradient.addColorStop(0, '#8B4513');
+    gradient.addColorStop(0.5, '#A0522D');
+    gradient.addColorStop(1, '#8B4513');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Wood grain
+    for (let i = 0; i < 100; i++) {
+        ctx.strokeStyle = `rgba(101, 67, 33, ${Math.random() * 0.3})`;
+        ctx.lineWidth = Math.random() * 2 + 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 512, 0);
+        ctx.lineTo(Math.random() * 512, 512);
+        ctx.stroke();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(2, 2);
+    return texture;
+}
+
+function createCarpetTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    // Base carpet color (office gray)
+    ctx.fillStyle = '#6b7280';
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Carpet fibers (noise)
+    for (let i = 0; i < 5000; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const brightness = Math.random() * 50 - 25;
+        ctx.fillStyle = `rgb(${107 + brightness}, ${114 + brightness}, ${128 + brightness})`;
+        ctx.fillRect(x, y, 2, 2);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10, 10);
+    return texture;
+}
+
+function createMetalTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Brushed metal effect
+    const gradient = ctx.createLinearGradient(0, 0, 256, 0);
+    gradient.addColorStop(0, '#888888');
+    gradient.addColorStop(0.5, '#aaaaaa');
+    gradient.addColorStop(1, '#888888');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 256, 256);
+
+    // Brush lines
+    for (let i = 0; i < 50; i++) {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${Math.random() * 0.2})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 256, 0);
+        ctx.lineTo(Math.random() * 256, 256);
+        ctx.stroke();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    return texture;
+}
+
+function createConcreteTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    // Base concrete color
+    ctx.fillStyle = '#d4d4d4';
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Concrete texture (noise and cracks)
+    for (let i = 0; i < 3000; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const brightness = Math.random() * 40 - 20;
+        ctx.fillStyle = `rgb(${212 + brightness}, ${212 + brightness}, ${212 + brightness})`;
+        ctx.fillRect(x, y, Math.random() * 3 + 1, Math.random() * 3 + 1);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+    return texture;
+}
+
+function createFabricTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Base fabric color
+    ctx.fillStyle = '#333333';
+    ctx.fillRect(0, 0, 256, 256);
+
+    // Fabric weave pattern
+    for (let x = 0; x < 256; x += 4) {
+        for (let y = 0; y < 256; y += 4) {
+            const brightness = Math.random() * 30 - 15;
+            ctx.fillStyle = `rgb(${51 + brightness}, ${51 + brightness}, ${51 + brightness})`;
+            ctx.fillRect(x, y, 2, 2);
+        }
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+    return texture;
+}
 
 // ==================== INITIALIZATION ====================
 function init() {
     console.log('Initializing 3D Game...');
+
+    // Create textures first
+    createProceduralTextures();
 
     // Setup Three.js scene
     setupScene();
@@ -82,6 +249,9 @@ function init() {
 
     // Setup lights
     setupLights();
+
+    // Setup post-processing
+    setupPostProcessing();
 
     // Hide loading screen
     document.getElementById('loading-screen').style.display = 'none';
@@ -211,13 +381,40 @@ function setupLights() {
     GameState.scene.add(officeLight3);
 }
 
+function setupPostProcessing() {
+    // Check if EffectComposer is available
+    if (typeof THREE.EffectComposer === 'undefined') {
+        console.warn('Post-processing not available - EffectComposer not loaded');
+        return;
+    }
+
+    // Create composer
+    GameState.composer = new THREE.EffectComposer(GameState.renderer);
+
+    // Render pass
+    const renderPass = new THREE.RenderPass(GameState.scene, GameState.camera);
+    GameState.composer.addPass(renderPass);
+
+    // Bloom pass for glow effect
+    const bloomPass = new THREE.UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        0.5,  // strength
+        0.4,  // radius
+        0.85  // threshold
+    );
+    GameState.composer.addPass(bloomPass);
+
+    console.log('Post-processing enabled with Bloom');
+}
+
 function createOfficeEnvironment() {
-    // Floor
+    // Floor with carpet texture
     const floorGeometry = new THREE.PlaneGeometry(60, 60);
     const floorMaterial = new THREE.MeshStandardMaterial({
-        color: 0x808080,
-        roughness: 0.8,
-        metalness: 0.2
+        map: GameState.textures.carpet,
+        roughness: 0.9,
+        metalness: 0.0,
+        normalScale: new THREE.Vector2(0.5, 0.5)
     });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
@@ -233,11 +430,13 @@ function createOfficeEnvironment() {
     floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
     GameState.world.addBody(floorBody);
 
-    // Ceiling
+    // Ceiling with concrete texture
     const ceilingGeometry = new THREE.PlaneGeometry(60, 60);
     const ceilingMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0.9,
+        map: GameState.textures.concrete,
+        color: 0xeeeeee,
+        roughness: 0.95,
+        metalness: 0.0,
         side: THREE.DoubleSide
     });
     const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
@@ -258,8 +457,10 @@ function createOfficeEnvironment() {
 
 function createWalls() {
     const wallMaterial = new THREE.MeshStandardMaterial({
-        color: 0xdddddd,
-        roughness: 0.7
+        map: GameState.textures.concrete,
+        color: 0xeeeeee,
+        roughness: 0.85,
+        metalness: 0.0
     });
 
     const walls = [
@@ -313,15 +514,17 @@ function createWalls() {
 
 function createFurniture() {
     const deskMaterial = new THREE.MeshStandardMaterial({
-        color: 0x8B4513,
+        map: GameState.textures.wood,
         roughness: 0.6,
         metalness: 0.1
     });
 
     const computerMaterial = new THREE.MeshStandardMaterial({
-        color: 0x333333,
+        map: GameState.textures.metal,
+        color: 0x444444,
         roughness: 0.3,
-        metalness: 0.7
+        metalness: 0.8,
+        emissive: 0x111111
     });
 
     // Desks with computers
@@ -486,33 +689,93 @@ function createNPCs() {
     npcDataList.slice(0, 12).forEach((npcData, index) => {
         const pos = npcPositions[index];
 
-        // Create NPC 3D model (simple humanoid)
+        // Create NPC 3D model (detailed humanoid)
         const npcGroup = new THREE.Group();
+        const baseColor = getRandomColor();
 
-        // Body
-        const bodyGeometry = new THREE.BoxGeometry(0.6, 1, 0.4);
-        const bodyMaterial = new THREE.MeshStandardMaterial({
-            color: getRandomColor(),
-            roughness: 0.7
+        // Legs
+        const legGeometry = new THREE.BoxGeometry(0.2, 0.7, 0.2);
+        const legMaterial = new THREE.MeshStandardMaterial({
+            color: 0x2c3e50,
+            roughness: 0.8
         });
-        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-        body.position.y = 1;
-        body.castShadow = true;
-        npcGroup.add(body);
+        const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+        leftLeg.position.set(-0.15, 0.35, 0);
+        leftLeg.castShadow = true;
+        npcGroup.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+        rightLeg.position.set(0.15, 0.35, 0);
+        rightLeg.castShadow = true;
+        npcGroup.add(rightLeg);
+
+        // Torso
+        const torsoGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.3);
+        const torsoMaterial = new THREE.MeshStandardMaterial({
+            color: baseColor,
+            roughness: 0.6,
+            metalness: 0.1
+        });
+        const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+        torso.position.y = 1.1;
+        torso.castShadow = true;
+        npcGroup.add(torso);
+
+        // Arms
+        const armGeometry = new THREE.BoxGeometry(0.15, 0.7, 0.15);
+        const armMaterial = new THREE.MeshStandardMaterial({
+            color: baseColor,
+            roughness: 0.6
+        });
+        const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+        leftArm.position.set(-0.375, 1, 0);
+        leftArm.castShadow = true;
+        npcGroup.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+        rightArm.position.set(0.375, 1, 0);
+        rightArm.castShadow = true;
+        npcGroup.add(rightArm);
 
         // Head
-        const headGeometry = new THREE.SphereGeometry(0.25, 16, 16);
+        const headGeometry = new THREE.SphereGeometry(0.25, 20, 20);
         const headMaterial = new THREE.MeshStandardMaterial({
             color: 0xffdbac,
-            roughness: 0.8
+            roughness: 0.7
         });
         const head = new THREE.Mesh(headGeometry, headMaterial);
         head.position.y = 1.75;
         head.castShadow = true;
         npcGroup.add(head);
 
+        // Eyes
+        const eyeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+        const eyeMaterial = new THREE.MeshStandardMaterial({
+            color: 0x000000,
+            emissive: 0x333333
+        });
+        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        leftEye.position.set(-0.1, 1.8, 0.22);
+        npcGroup.add(leftEye);
+
+        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        rightEye.position.set(0.1, 1.8, 0.22);
+        npcGroup.add(rightEye);
+
+        // Add glow effect around NPC
+        const glowGeometry = new THREE.SphereGeometry(0.8, 16, 16);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: baseColor,
+            transparent: true,
+            opacity: 0.1,
+            side: THREE.BackSide
+        });
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        glow.position.y = 1.2;
+        npcGroup.add(glow);
+
         // Name tag above head
-        createNameTag(npcData.name, npcGroup, 2.2);
+        createNameTag(npcData.name, npcGroup, 2.3);
 
         // Position NPC
         npcGroup.position.set(pos.x + 1, 0, pos.z);
@@ -525,6 +788,9 @@ function createNPCs() {
             position: pos,
             talked: false
         });
+
+        // Add particle effect above NPC
+        createNPCParticles(npcGroup, baseColor);
     });
 }
 
@@ -555,6 +821,76 @@ function createNameTag(name, parentGroup, yOffset) {
 function getRandomColor() {
     const colors = [0x3498db, 0xe74c3c, 0x2ecc71, 0xf39c12, 0x9b59b6, 0x1abc9c];
     return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// ==================== PARTICLE SYSTEM ====================
+function createNPCParticles(npcGroup, color) {
+    const particleCount = 20;
+    const geometry = new THREE.BufferGeometry();
+    const positions = [];
+    const velocities = [];
+
+    for (let i = 0; i < particleCount; i++) {
+        positions.push(
+            (Math.random() - 0.5) * 0.5,
+            2.5 + Math.random() * 0.5,
+            (Math.random() - 0.5) * 0.5
+        );
+        velocities.push(
+            (Math.random() - 0.5) * 0.02,
+            Math.random() * 0.02 + 0.01,
+            (Math.random() - 0.5) * 0.02
+        );
+    }
+
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+        color: color,
+        size: 0.1,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    npcGroup.add(particles);
+
+    // Store particle system for updates
+    GameState.particleSystems.push({
+        particles: particles,
+        velocities: velocities,
+        parent: npcGroup,
+        time: 0
+    });
+}
+
+function updateParticles(delta) {
+    GameState.particleSystems.forEach(system => {
+        const positions = system.particles.geometry.attributes.position.array;
+
+        for (let i = 0; i < positions.length / 3; i++) {
+            const idx = i * 3;
+
+            // Update position
+            positions[idx] += system.velocities[idx];
+            positions[idx + 1] += system.velocities[idx + 1];
+            positions[idx + 2] += system.velocities[idx + 2];
+
+            // Reset particle if too high
+            if (positions[idx + 1] > 3.5) {
+                positions[idx] = (Math.random() - 0.5) * 0.5;
+                positions[idx + 1] = 2.5;
+                positions[idx + 2] = (Math.random() - 0.5) * 0.5;
+            }
+        }
+
+        system.particles.geometry.attributes.position.needsUpdate = true;
+
+        // Rotate particles slightly
+        system.particles.rotation.y += delta * 0.5;
+    });
 }
 
 function setupControls() {
@@ -698,8 +1034,15 @@ function animate() {
     // Update HUD
     updateHUD();
 
-    // Render
-    GameState.renderer.render(GameState.scene, GameState.camera);
+    // Update particle systems
+    updateParticles(delta);
+
+    // Render with post-processing if available
+    if (GameState.composer) {
+        GameState.composer.render();
+    } else {
+        GameState.renderer.render(GameState.scene, GameState.camera);
+    }
 }
 
 function updatePlayerMovement(delta) {
@@ -846,8 +1189,14 @@ function handleAnswer(selectedIndex, correctIndex) {
         GameState.currentNPC.talked = true;
         GameState.npcProgress++;
 
-        // Change NPC color to indicate completion
-        GameState.currentNPC.mesh.children[0].material.color.setHex(0x4CAF50);
+        // Change NPC color to indicate completion (torso is at index 2)
+        // Also change arms (indices 3, 4) and glow (index 7)
+        GameState.currentNPC.mesh.children[2].material.color.setHex(0x4CAF50); // Torso
+        GameState.currentNPC.mesh.children[3].material.color.setHex(0x4CAF50); // Left arm
+        GameState.currentNPC.mesh.children[4].material.color.setHex(0x4CAF50); // Right arm
+        if (GameState.currentNPC.mesh.children[7]) {
+            GameState.currentNPC.mesh.children[7].material.color.setHex(0x4CAF50); // Glow
+        }
 
         // Play success sound
         playSoundEffect(1200, 0.3);
