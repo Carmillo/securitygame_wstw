@@ -1,11 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(start C:AI_Appssecuritygame_publiccover.html)",
-      "Bash(start C:AI_Appssecuritygame_publicindex.html)",
-      "Bash(start \"C:\\AI_Apps\\securitygame_public\\index.html\")",
-      "Bash(dir:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(start \"C:\\AI_Apps\\securitygame_public\\cover.html\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

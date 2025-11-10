@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IT-Security Adventure - Cover Image</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #coverCanvas {
+            border: 2px solid #00d9ff;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+        }
+        .instructions {
+            color: white;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <canvas id="coverCanvas" width="630" height="500"></canvas>
+        <div class="instructions">
+            <p>Right-click on the image above and "Save image as..." to download</p>
+            <p>Recommended size: 630x500 (itch.io cover format)</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('coverCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Background gradient
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, '#0f3460');
+        gradient.addColorStop(0.5, '#16213e');
+        gradient.addColorStop(1, '#0f3460');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Add grid pattern for retro feel
+        ctx.strokeStyle = 'rgba(0, 217, 255, 0.1)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < canvas.width; i += 40) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, canvas.height);
+            ctx.stroke();
+        }
+        for (let i = 0; i < canvas.height; i += 40) {
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.stroke();
+        }
+
+        // Draw Logo (TechCorp "T") - centered top
+        ctx.save();
+        ctx.translate(canvas.width / 2, 80);
+
+        // Outer circle
+        ctx.fillStyle = '#0066CC';
+        ctx.beginPath();
+        ctx.arc(0, 0, 50, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner circle
+        ctx.fillStyle = '#00CC66';
+        ctx.beginPath();
+        ctx.arc(0, 0, 38, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Letter T
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 45px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('T', 0, 3);
+
+        ctx.restore();
+
+        // Main Title - centered
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#00d9ff';
+        ctx.font = 'bold 48px Courier New';
+        ctx.fillText('IT-SECURITY', canvas.width / 2, 170);
+
+        ctx.fillStyle = '#ff6b6b';
+        ctx.font = 'bold 48px Courier New';
+        ctx.fillText('ADVENTURE', canvas.width / 2, 220);
+
+        // Tagline
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '16px Courier New';
+        ctx.fillText('Interactive Security Awareness Training', canvas.width / 2, 255);
+
+        // Features list - compact
+        ctx.font = 'bold 14px Courier New';
+        ctx.fillStyle = '#00d9ff';
+        ctx.textAlign = 'left';
+        const features = [
+            '🌍 Bilingual (DE/EN)',
+            '📱 Mobile-Friendly',
+            '🎓 39 Questions',
+            '🏆 Leaderboard',
+            '📜 Certificate'
+        ];
+
+        let yPos = 295;
+        const leftCol = 40;
+        const rightCol = canvas.width / 2 + 20;
+
+        features.forEach((feature, i) => {
+            const xPos = i < 3 ? leftCol : rightCol;
+            const yOffset = i < 3 ? i : i - 3;
+            ctx.fillText(feature, xPos, yPos + yOffset * 30);
+        });
+
+        // Draw pixel character (simplified player sprite)
+        function drawPixelChar(x, y, color) {
+            const size = 3;
+            ctx.fillStyle = color;
+            // Head
+            ctx.fillRect(x + size * 2, y, size * 4, size * 4);
+            // Body
+            ctx.fillRect(x + size * 2, y + size * 4, size * 4, size * 6);
+            // Arms
+            ctx.fillRect(x, y + size * 5, size * 2, size * 4);
+            ctx.fillRect(x + size * 8, y + size * 5, size * 2, size * 4);
+            // Legs
+            ctx.fillRect(x + size * 2, y + size * 10, size * 2, size * 4);
+            ctx.fillRect(x + size * 6, y + size * 10, size * 2, size * 4);
+        }
+
+        // Draw NPC characters at bottom
+        const npcColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f'];
+        const startX = (canvas.width - (npcColors.length * 50)) / 2;
+        npcColors.forEach((color, i) => {
+            drawPixelChar(startX + i * 50, 395, color);
+        });
+
+        // Bottom banner
+        ctx.fillStyle = 'rgba(0, 102, 204, 0.8)';
+        ctx.fillRect(0, canvas.height - 55, canvas.width, 55);
+
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 18px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillText('🛡️ Learn Security Through Play 🎮', canvas.width / 2, canvas.height - 25);
+
+        // Decorative border
+        ctx.strokeStyle = '#00d9ff';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+        console.log('Cover image generated! Right-click to save.');
+    </script>
+</body>
+</html>

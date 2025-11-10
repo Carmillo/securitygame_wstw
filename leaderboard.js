@@ -110,7 +110,13 @@ function initializeRegistration() {
                     startGameWithLanguage();
                 }
             }, 100);
+        } else {
+            // Registration expired - show registration form
+            document.getElementById('registrationOverlay').style.display = 'flex';
         }
+    } else {
+        // No saved user - show registration form
+        document.getElementById('registrationOverlay').style.display = 'flex';
     }
 }
 
