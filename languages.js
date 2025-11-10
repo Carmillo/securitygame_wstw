@@ -26,7 +26,11 @@ const LANGUAGES = {
             nextPage: 'Weiter',
             previousPage: 'Zurück',
             trainingComplete: 'Schulung abgeschlossen!',
-            readyToPlay: 'Du bist jetzt bereit für das Spiel. Viel Erfolg!'
+            readyToPlay: 'Du bist jetzt bereit für das Spiel. Viel Erfolg!',
+            // Welcome info
+            welcomeTitle: '🎓 Willkommen!',
+            welcomeMessage: '<h3>So funktioniert das Spiel:</h3><ul style="text-align: left; margin: 20px 0;"><li><strong>1. Schulung:</strong> Zuerst lernst du die Grundlagen der IT-Sicherheit</li><li><strong>2. Spiel:</strong> Dann wendest du dein Wissen im interaktiven Spiel an</li><li><strong>3. Belohnung:</strong> Am Ende erhältst du ein Zertifikat! 🏆</li></ul><p style="margin-top: 20px;">Viel Erfolg und hab Spaß beim Lernen!</p>',
+            welcomeButton: 'Los geht\'s! 🚀'
         },
 
         // Training Module
@@ -136,7 +140,11 @@ const LANGUAGES = {
             nextPage: 'Next',
             previousPage: 'Back',
             trainingComplete: 'Training Complete!',
-            readyToPlay: 'You are now ready for the game. Good luck!'
+            readyToPlay: 'You are now ready for the game. Good luck!',
+            // Welcome info
+            welcomeTitle: '🎓 Welcome!',
+            welcomeMessage: '<h3>How the game works:</h3><ul style="text-align: left; margin: 20px 0;"><li><strong>1. Training:</strong> First, you\'ll learn the basics of IT security</li><li><strong>2. Game:</strong> Then apply your knowledge in the interactive game</li><li><strong>3. Reward:</strong> At the end, you\'ll receive a certificate! 🏆</li></ul><p style="margin-top: 20px;">Good luck and have fun learning!</p>',
+            welcomeButton: 'Let\'s Go! 🚀'
         },
 
         // Training Module

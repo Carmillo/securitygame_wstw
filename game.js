@@ -254,10 +254,9 @@ document.getElementById('musicToggle').addEventListener('click', function() {
     initAudio();
 
     musicPlaying = !musicPlaying;
-    const musicText = musicPlaying ?
-        (currentLanguage === 'en' ? `🔊 ${t('ui.music')}: ${t('ui.musicOn')}` : `🔊 ${t('ui.music')}: ${t('ui.musicOn')}`) :
-        (currentLanguage === 'en' ? `🔇 ${t('ui.music')}: ${t('ui.musicOff')}` : `🔇 ${t('ui.music')}: ${t('ui.musicOff')}`);
-    this.textContent = musicText;
+
+    // Update button text using centralized function
+    updateUIForDeviceType();
 
     if (musicPlaying) {
         if (isQuizMusicPlaying) {
@@ -590,6 +589,9 @@ function showVictoryMessage() {
         submitToLeaderboard(score, score, totalQuestions + incidentScore, playTimeMinutes, incidentScore);
     }
 
+    // Launch confetti animation!
+    launchConfetti();
+
     // Show victory screen
     document.getElementById('victoryScreen').classList.add('show');
     document.getElementById('finalScore').textContent = score;
@@ -642,10 +644,10 @@ function playVictorySound() {
 
 // Print certificate function
 function printCertificate() {
-    const promptText = currentLanguage === 'en' ?
-        'Your name for the certificate:' :
-        'Dein Name für das Zertifikat:';
-    const userName = prompt(promptText) || 'Security Champion';
+    // Get user name from userData (from leaderboard.js registration)
+    const userName = (typeof userData !== 'undefined' && userData.username) ? userData.username : 'Security Champion';
+    const userCountry = (typeof userData !== 'undefined' && userData.countryFlag) ? userData.countryFlag : '🌍';
+
     const locale = currentLanguage === 'en' ? 'en-US' : 'de-AT';
     const today = new Date().toLocaleDateString(locale);
 
@@ -717,13 +719,13 @@ function printCertificate() {
             <div class="certificate">
                 <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" fill="#0066CC"/>
-                    <circle cx="50" cy="50" r="35" fill="#E30613"/>
-                    <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">W</text>
+                    <circle cx="50" cy="50" r="35" fill="#00CC66"/>
+                    <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">T</text>
                 </svg>
                 <h1>🏆 ${certTitle} 🏆</h1>
                 <h2>${certSubtitle}</h2>
                 <p>${certText1}</p>
-                <div class="name">${userName}</div>
+                <div class="name">${userCountry} ${userName}</div>
                 <p>${certText2}</p>
                 <p><strong>TechCorp Industries GmbH</strong></p>
                 <p>${certText3}</p>
@@ -1471,10 +1473,7 @@ function startGame() {
         if (!trainingComplete) return;
         initAudio();
         musicPlaying = true;
-        const musicText = currentLanguage === 'en' ?
-            `🔊 ${t('ui.music')}: ${t('ui.musicOn')}` :
-            `🔊 ${t('ui.music')}: ${t('ui.musicOn')}`;
-        document.getElementById('musicToggle').textContent = musicText;
+        updateUIForDeviceType(); // Update all UI text including music button
         playBackgroundMusic();
     }, 1000);
 }
@@ -1483,6 +1482,31 @@ function startGame() {
 function startGameWithLanguage() {
     // Reload language-specific data
     loadLanguageData();
+
+    // Update all UI text for selected language and device type
+    updateUIForDeviceType();
+
+    // Show welcome info screen
+    showWelcomeInfo();
+}
+
+// Show welcome info overlay
+function showWelcomeInfo() {
+    const overlay = document.getElementById('welcomeInfoOverlay');
+    const title = document.getElementById('welcomeInfoTitle');
+    const message = document.getElementById('welcomeInfoMessage');
+    const button = document.getElementById('welcomeInfoButton');
+
+    title.textContent = t('ui.welcomeTitle');
+    message.innerHTML = t('ui.welcomeMessage');
+    button.textContent = t('ui.welcomeButton');
+
+    overlay.style.display = 'flex';
+}
+
+// Start training from welcome screen
+function startTrainingFromWelcome() {
+    document.getElementById('welcomeInfoOverlay').style.display = 'none';
 
     // Try to load saved progress
     const hasProgress = loadProgress();
@@ -1499,31 +1523,57 @@ function startGameWithLanguage() {
 
 // Initialize training when page loads
 window.addEventListener('DOMContentLoaded', () => {
-    // Update UI text based on device type
-    updateUIForDeviceType();
-
     // Note: Registration overlay handles initial setup
     // startGameWithLanguage() will be called after registration
+    // UI text will be updated then based on selected language
 });
 
-// Update UI text for touch vs keyboard devices
+// Update UI text for touch vs keyboard devices and current language
 function updateUIForDeviceType() {
     const dialogContinue = document.getElementById('dialogContinue');
+    const scoreLabel = document.getElementById('scoreLabel');
+    const controlMove = document.getElementById('controlMove');
+    const controlInteract = document.getElementById('controlInteract');
+    const newGameButton = document.getElementById('newGameButton');
+    const musicButton = document.getElementById('musicToggle');
 
+    // Update dialog continue hint
     if (isTouchDevice) {
-        // Update dialog continue hint for touch devices
         if (currentLanguage === 'en') {
             dialogContinue.textContent = '▼ TAP to continue';
         } else {
             dialogContinue.textContent = '▼ TIPPEN zum Fortfahren';
         }
     } else {
-        // Keep SPACE hint for keyboard devices
         if (currentLanguage === 'en') {
             dialogContinue.textContent = '▼ SPACE to continue';
         } else {
             dialogContinue.textContent = '▼ SPACE zum Fortfahren';
         }
+    }
+
+    // Update score label
+    if (scoreLabel) {
+        scoreLabel.textContent = currentLanguage === 'en' ? 'Points' : 'Punkte';
+    }
+
+    // Update control hints
+    if (controlMove) {
+        controlMove.textContent = currentLanguage === 'en' ? 'Move' : 'Bewegen';
+    }
+    if (controlInteract) {
+        controlInteract.textContent = currentLanguage === 'en' ? 'Interact / Continue' : 'Interagieren / Weiter';
+    }
+
+    // Update new game button
+    if (newGameButton) {
+        newGameButton.textContent = currentLanguage === 'en' ? 'NEW GAME' : 'NEUES SPIEL';
+    }
+
+    // Update music button
+    if (musicButton) {
+        const musicStatus = musicPlaying ? (currentLanguage === 'en' ? 'ON' : 'AN') : (currentLanguage === 'en' ? 'OFF' : 'AUS');
+        musicButton.textContent = (currentLanguage === 'en' ? '🎵 Music: ' : '🎵 Musik: ') + musicStatus;
     }
 }
 
@@ -1633,4 +1683,92 @@ if (dialogBox && isTouchDevice) {
             closeDialog();
         }
     }, { passive: false });
+}
+
+// ===== CONFETTI ANIMATION =====
+
+// Confetti animation for victory screen
+function launchConfetti() {
+    const duration = 4000; // 4 seconds
+    const animationEnd = Date.now() + duration;
+    const colors = ['#00d9ff', '#ff6b6b', '#ffd93d', '#6bcf7f', '#a78bfa', '#fb923c'];
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 3;
+
+        // Create confetti bursts from different positions
+        for (let i = 0; i < particleCount; i++) {
+            createConfettiPiece(
+                randomInRange(0.1, 0.9), // x position
+                randomInRange(-0.2, 0.0), // y position (from top)
+                colors[Math.floor(Math.random() * colors.length)]
+            );
+        }
+    }, 50);
+}
+
+// Create individual confetti piece
+function createConfettiPiece(xPos, yPos, color) {
+    const confetti = document.createElement('div');
+    confetti.style.cssText = `
+        position: fixed;
+        width: ${Math.random() * 10 + 5}px;
+        height: ${Math.random() * 10 + 5}px;
+        background: ${color};
+        left: ${xPos * 100}%;
+        top: ${yPos * 100}%;
+        opacity: 1;
+        transform: rotate(${Math.random() * 360}deg);
+        z-index: 10002;
+        pointer-events: none;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+    `;
+
+    document.body.appendChild(confetti);
+
+    // Animate
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 200 + 100;
+    const vx = Math.cos(angle) * velocity;
+    const vy = Math.sin(angle) * velocity + Math.random() * 200; // Bias downward
+
+    let x = parseFloat(confetti.style.left);
+    let y = parseFloat(confetti.style.top);
+    let rotation = 0;
+    let opacity = 1;
+
+    const gravity = 300; // pixels per second squared
+    const startTime = Date.now();
+
+    function animate() {
+        const elapsed = (Date.now() - startTime) / 1000; // seconds
+
+        x = parseFloat(xPos * 100) + vx * elapsed;
+        y = parseFloat(yPos * 100) + vy * elapsed + 0.5 * gravity * elapsed * elapsed;
+        rotation += 5;
+        opacity = Math.max(0, 1 - elapsed / 3);
+
+        confetti.style.left = x + '%';
+        confetti.style.top = y + '%';
+        confetti.style.transform = `rotate(${rotation}deg)`;
+        confetti.style.opacity = opacity;
+
+        if (y < 200 && opacity > 0) {
+            requestAnimationFrame(animate);
+        } else {
+            confetti.remove();
+        }
+    }
+
+    requestAnimationFrame(animate);
 }

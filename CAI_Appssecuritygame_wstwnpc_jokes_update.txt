@@ -1,0 +1,7 @@
+cleandesk: "Clean-Desk-Beauftragte" - "Mein Schreibtisch ist so clean, selbst Marie Kondo wäre neidisch! ✨🗂️"
+usb: "USB-Sicherheits-Experte" - "Ich traue keinem USB-Stick. Die könnten überall gewesen sein! 💾😱"
+ransomware: "Ransomware-Jäger" - "Ich verschlüssele meine Witze. Wer lachen will, muss zahlen! 😂🔒"
+updates: "Update-Evangelist" - "Ich update sogar meine Witze regelmäßig. Sicherheit first! 🔄"
+wifi: "WLAN-Sicherheits-Profi" - "Öffentliches WLAN ohne VPN? Das ist wie nackt durch Wien spazieren! 📡🙈"
+backup: "Backup-Spezialistin" - "Ich hab sogar ein Backup von meinem Backup. Paranoid? Nein, vorbereitet! 💾💾"
+datenschutz: "DSGVO-Beauftragter" - "Ich schütze Daten wie meine Oma ihr Gulasch-Rezept! 🛡️📋"
